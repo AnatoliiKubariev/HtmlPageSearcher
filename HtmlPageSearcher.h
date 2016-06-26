@@ -1,13 +1,14 @@
 #pragma once
 
+#include "Common.h"
+#include "HttpLoader.h"
+#include "ui_HtmlPageSearcher.h"
+
 #include <set>
-#include <string>
+#include <map>
 
 #include <QMainWindow>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
 
-#include "ui_HtmlPageSearcher.h"
 
 class HtmlPageSearcher: public QMainWindow
 {
@@ -16,23 +17,17 @@ class HtmlPageSearcher: public QMainWindow
 public:
 	HtmlPageSearcher(QWidget* parent = 0);
 
-	void ReadHtml(const QUrl& url);
-	void FindUrl();
+	void BFS(const Url& start_url);
+
+	std::vector<Url> FindUrl(std::string& request_string);
 
 private:
-	void ReadData();
-	void Finished();
-
 	Ui::HtmlPageSearcherClass ui;
+	HttpLoader m_loader;
 
-	std::string m_request_string;
-
-	QNetworkAccessManager m_request_manager;
-	QNetworkReply* m_reply;
-	QEventLoop m_loop;
-
+	std::map<Url, Page> m_web_peges;
+	std::set<Url> m_visited;
 	size_t m_url_number = 20;
-	std::set<std::string> m_urls;
 
 	const std::string m_valid_url_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&\'()*+,;=";
 };

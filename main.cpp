@@ -7,8 +7,7 @@ int main(int argc, char *argv[])
 	HtmlPageSearcher w;
 	w.show();
 
-	w.ReadHtml(QUrl("http://pastebin.com/"));
-	w.FindUrl();
+	w.BFS("http://pastebin.com/");
 
 	return a.exec();
 }
