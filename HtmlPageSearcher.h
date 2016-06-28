@@ -1,16 +1,14 @@
 #pragma once
 
+#include "BfsSearcher.h"
 #include "Common.h"
 #include "ui_HtmlPageSearcher.h"
 
-#include <set>
-#include <map>
 #include <memory>
-#include <thread>
-#include <mutex>
+#include <string>
 
 #include <QMainWindow>
-
+#include <QThread>
 
 class HtmlPageSearcher: public QMainWindow
 {
@@ -23,6 +21,10 @@ private:
     void Started();
     void Stoped();
     void Paused();
+    bool FindText(Page& page, std::string& text_to_search);
+
+    std::string m_search_text;
+    std::unique_ptr<BfsSearcher> m_searcher;
 
     Ui::HtmlPageSearcherClass m_ui;
 };
