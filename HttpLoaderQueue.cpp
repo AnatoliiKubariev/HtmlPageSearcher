@@ -34,6 +34,7 @@ void HttpLoaderQueue::Push(const Url& url)
 {
     {
         std::unique_lock<std::mutex> lock(m_mutex_urls);
+        //m_condition_push.wait(lock, [&]() { return ; });
 
         m_url_to_load.push(url);
     }

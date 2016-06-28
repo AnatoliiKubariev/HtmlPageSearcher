@@ -20,7 +20,9 @@ public:
     HtmlPageSearcher(QWidget* parent = 0);
 
 private:
-    void ShowResult(const std::string& text);
+    void Started();
+    void Stoped();
+    void Paused();
 
     Ui::HtmlPageSearcherClass m_ui;
 };
