@@ -1,33 +1,26 @@
 #pragma once
 
 #include "Common.h"
-#include "HttpLoader.h"
 #include "ui_HtmlPageSearcher.h"
 
 #include <set>
 #include <map>
+#include <memory>
+#include <thread>
+#include <mutex>
 
 #include <QMainWindow>
 
 
 class HtmlPageSearcher: public QMainWindow
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	HtmlPageSearcher(QWidget* parent = 0);
-
-	void BFS(const Url& start_url);
-
-	std::vector<Url> FindUrl(std::string& request_string);
+    HtmlPageSearcher(QWidget* parent = 0);
 
 private:
-	Ui::HtmlPageSearcherClass ui;
-	HttpLoader m_loader;
+    void ShowResult(const std::string& text);
 
-	std::map<Url, Page> m_web_peges;
-	std::set<Url> m_visited;
-	size_t m_url_number = 20;
-
-	const std::string m_valid_url_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&\'()*+,;=";
+    Ui::HtmlPageSearcherClass m_ui;
 };

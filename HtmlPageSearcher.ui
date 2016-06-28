@@ -14,14 +14,27 @@
    <string>HtmlPageSearcher</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTextEdit" name="textEdit">
+   <widget class="QTextEdit" name="m_text_edit">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
       <width>431</width>
-      <height>321</height>
+      <height>211</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="m_button_start">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>270</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
     </property>
    </widget>
   </widget>
