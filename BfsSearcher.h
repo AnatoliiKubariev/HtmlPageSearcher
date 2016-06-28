@@ -1,6 +1,7 @@
 #pragma once
 
 #include"Common.h"
+#include "HttpLoaderQueue.h"
 
 #include <functional>
 #include <vector>
@@ -14,28 +15,24 @@ class BfsSearcher: public QObject
     Q_OBJECT
 
 public:
+    using PageHandler = std::function<void(const Url&, Page&)>;
+
     BfsSearcher(Url& start_url,
                 const size_t m_url_max_number, const size_t threads_number,
-                std::function<void(const Url&, Page&)>);
-
-    ~BfsSearcher()
-    {
-
-    }
+                PageHandler page_handler);
 
     void BFS();
     void Stop();
 
 signals:
-    void ProgresIncliment(int value);
+    void ProgressIncrement(int value);
 
 private:
     std::vector<Url> FindUrls(Page& page);
 
-    Url m_start_url;
     size_t m_url_max_number;
-    size_t m_threads_number;
-    std::function<void(const Url&, Page&)> m_page_handler;
+    PageHandler m_page_handler;
+    HttpLoaderQueue m_fringe;
     bool m_stop;
 
     const std::string m_valid_url_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&\'()*+,;=";

@@ -2,20 +2,9 @@
 
 HttpLoaderQueue::~HttpLoaderQueue()
 {
+    if(!m_stop)
     {
-        std::unique_lock<std::mutex> lock(m_mutex_urls);
-
-        while(!m_url_to_load.empty())
-        {
-            m_url_to_load.pop();
-        }
-        m_stop = true;
-    }
-
-    m_condition_push.notify_all();
-    for(auto& thread : m_threads)
-    {
-        thread.join();
+        Stop();
     }
 }
 
@@ -32,9 +21,12 @@ HttpLoaderQueue::HttpLoaderQueue(const Url& star_url, const size_t threads_numbe
 
 void HttpLoaderQueue::Push(const Url& url)
 {
+    if(m_stop)
+    {
+        return;
+    }
     {
         std::unique_lock<std::mutex> lock(m_mutex_urls);
-        //m_condition_push.wait(lock, [&]() { return ; });
 
         m_url_to_load.push(url);
     }
@@ -55,8 +47,21 @@ std::pair<Url, Page> HttpLoaderQueue::Pop()
 
 void HttpLoaderQueue::Stop()
 {
-    m_stop = true;
+    {
+        std::unique_lock<std::mutex> lock(m_mutex_urls);
+
+        while(!m_url_to_load.empty())
+        {
+            m_url_to_load.pop();
+        }
+        m_stop = true;
+    }
+
     m_condition_push.notify_all();
+    for(auto& thread : m_threads)
+    {
+        thread.join();
+    }
 }
 
 void HttpLoaderQueue::RunThreads()

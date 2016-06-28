@@ -51,6 +51,8 @@ void HtmlPageSearcher::Started()
     m_ui.m_threads_number_spin_box->setDisabled(true);
     m_ui.m_button_start->setDisabled(true);
 
+    m_ui.m_button_stop->setEnabled(true);
+
     auto& text_edit = m_ui.m_text_edit;
     auto page_handler = [&](const Url& text, Page& page)
     {
@@ -66,7 +68,7 @@ void HtmlPageSearcher::Started()
     m_searcher->moveToThread(search_thread);
     connect(search_thread, &QThread::started, m_searcher.get(), &BfsSearcher::BFS);
     connect(search_thread, &QThread::finished, search_thread, &QThread::deleteLater);
-    connect(m_searcher.get(), &BfsSearcher::ProgresIncliment, m_ui.m_progress_bar, &QProgressBar::setValue);
+    connect(m_searcher.get(), &BfsSearcher::ProgressIncrement, m_ui.m_progress_bar, &QProgressBar::setValue);
     search_thread->start();
 }
 
@@ -77,6 +79,8 @@ void HtmlPageSearcher::Stoped()
     m_ui.m_url_max_number_spin_box->setEnabled(true);
     m_ui.m_threads_number_spin_box->setEnabled(true);
     m_ui.m_button_start->setEnabled(true);
+
+    m_ui.m_button_stop->setDisabled(true);
 
     m_searcher->Stop();
 }
