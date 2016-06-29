@@ -10,7 +10,7 @@ HttpLoaderQueue::~HttpLoaderQueue()
 
 HttpLoaderQueue::HttpLoaderQueue(const Url& star_url, const size_t threads_number)
     : m_url_to_load({star_url})
-    , m_runnig_tasks_counter(0, [](std::atomic_int* number) { --*number; })
+    , m_runnig_tasks_counter(0)
     , m_stop(false)
 {
     for(auto i = 0; i < threads_number; ++i)
@@ -90,9 +90,8 @@ void HttpLoaderQueue::RunThreads()
             current_url = m_url_to_load.front();
             m_url_to_load.pop();
         }
-        ++*m_runnig_tasks_counter.get();
+        Decrementor decrementor(m_runnig_tasks_counter);
         LoadHttpPage(current_url);
-        --*m_runnig_tasks_counter;
     }
 }
 

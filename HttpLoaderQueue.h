@@ -33,7 +33,7 @@ private:
 
     std::queue<Url> m_url_to_load;
     std::queue<WebPage> m_web_pages;
-    std::unique_ptr<std::atomic_int, std::function<void(std::atomic_int*)>> m_runnig_tasks_counter;
+    std::atomic_int m_runnig_tasks_counter;
 
     bool m_stop;
     std::vector<std::thread> m_threads;
@@ -41,4 +41,19 @@ private:
     std::mutex m_mutex_pages;
     std::condition_variable m_condition_push;
     std::condition_variable m_condition_pop;
+};
+
+struct Decrementor
+{
+    Decrementor(std::atomic_int& counter)
+        :m_counter(counter)
+    {
+        ++m_counter;
+    }
+    ~Decrementor()
+    {
+        --m_counter;
+    }
+
+    std::atomic_int& m_counter;
 };
