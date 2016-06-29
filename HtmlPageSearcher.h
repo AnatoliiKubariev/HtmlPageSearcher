@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BfsSearcher.h"
+#include "SearchOperation.h"
 #include "Common.h"
 #include "ui_HtmlPageSearcher.h"
 
@@ -20,11 +20,10 @@ public:
 private:
     void Started();
     void Stoped();
-    void Paused();
     bool FindText(Page& page, std::string& text_to_search);
 
     std::string m_search_text;
-    std::unique_ptr<BfsSearcher> m_searcher;
+    std::unique_ptr<SearchOperation> m_searcher;
 
     Ui::HtmlPageSearcherClass m_ui;
 };

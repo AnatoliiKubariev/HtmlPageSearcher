@@ -64,6 +64,14 @@ void HttpLoaderQueue::Stop()
     }
 }
 
+bool HttpLoaderQueue::IsEmpty()
+{
+    std::unique_lock<std::mutex> load_lock(m_mutex_urls);
+    std::unique_lock<std::mutex> loaded_lock(m_mutex_pages);
+
+    return m_url_to_load.empty() && m_web_pages.empty();
+}
+
 void HttpLoaderQueue::RunThreads()
 {
     Url current_url;
@@ -103,6 +111,17 @@ void HttpLoaderQueue::LoadHttpPage(const Url& url)
         reply->deleteLater();
         loop.exit();
     });
+    //connect(reply, static_cast<void(QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
+    //        [&](QNetworkReply::NetworkError code)->QNetworkReply::NetworkError
+    //{
+
+    //    loop.exit();
+    //});
+    //connect(reply, &QNetworkReply::sslErrors, [&](const QList<QSslError>& errors)
+    //{
+
+    //    loop.exit();
+    //});
     loop.exec();
 
     std::unique_lock<std::mutex> lock(m_mutex_pages);

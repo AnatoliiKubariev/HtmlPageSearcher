@@ -23,6 +23,7 @@ public:
     std::pair<Url, Page> Pop();
 
     void Stop();
+    bool IsEmpty();
 
 private:
     void RunThreads();
