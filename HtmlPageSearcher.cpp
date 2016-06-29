@@ -1,5 +1,7 @@
 #include "HtmlPageSearcher.h"
 
+#include "WebPage.h"
+
 #include <queue>
 #include <thread>
 #include <memory>
@@ -54,13 +56,19 @@ void HtmlPageSearcher::Started()
 
     auto& load_urls = m_ui.m_load_urls;
     auto& found_text = m_ui.m_found_text;
-    auto page_handler = [&](const Url& text, Page& page)
+    auto page_handler = [&](WebPage& web_page)
     {
-        load_urls->insertPlainText(QString::fromStdString(text + "\n"));
+        load_urls->insertPlainText(QString::fromStdString(web_page.m_url) + "\n");
         load_urls->moveCursor(QTextCursor::NextRow);
-        if(FindText(page, m_search_text))
+        if(FindText(web_page.m_page, m_search_text))
         {
-            found_text->insertPlainText(QString::fromStdString(text + "\n"));
+            found_text->insertPlainText(QString::fromStdString(web_page.m_url) + "\n");
+            found_text->moveCursor(QTextCursor::NextRow);
+        }
+        if(web_page.m_code != QNetworkReply::NoError)
+        {
+            int int_code = static_cast<int>(web_page.m_code);
+            found_text->insertPlainText(QString::fromStdString(web_page.m_url) + " error: " + QString::number(int_code) + "\n");
             found_text->moveCursor(QTextCursor::NextRow);
         }
     };

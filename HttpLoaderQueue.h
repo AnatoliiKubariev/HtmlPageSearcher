@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Common.h"
+#include "WebPage.h"
 
+#include <atomic>
 #include <queue>
 #include <utility>
 #include <thread>
@@ -20,7 +22,7 @@ public:
     HttpLoaderQueue(const Url& star_url, const size_t threads_number);
 
     void Push(const Url& url);
-    std::pair<Url, Page> Pop();
+    WebPage Pop();
 
     void Stop();
     bool IsEmpty();
@@ -30,7 +32,8 @@ private:
     void LoadHttpPage(const Url& url);
 
     std::queue<Url> m_url_to_load;
-    std::queue<std::pair<Url, Page>> m_web_pages;
+    std::queue<WebPage> m_web_pages;
+    std::unique_ptr<std::atomic_int, std::function<void(std::atomic_int*)>> m_runnig_tasks_counter;
 
     bool m_stop;
     std::vector<std::thread> m_threads;
